@@ -1,0 +1,119 @@
+/**
+ * ========================================================
+ * DESA BACA - Custom Stylesheet
+ * Dibuat ringkas & bersih sebagai pelengkap Tailwind CSS
+ * ========================================================
+ */
+
+/* 1. Variabel Tema (Warna Dasar Dark & Putih Warm) */
+:root {
+  --bg-color: #EFE8DB;        /* Warna kertas warm natural (ramah mata) */
+  --card-color: #F8F3EA;      /* Warna kartu warm cream */
+  --border-color: #D8CEBC;    /* Garis tepi warm */
+  --text-color: #231E18;      /* Teks espresso mudah dibaca */
+  --text-muted: #695F52;      /* Teks sekunder warm */
+  --input-bg: #E5DDD0;        /* Latar belakang input form */
+}
+
+html.dark {
+  --bg-color: #121316;        /* Latar belakang mode gelap */
+  --card-color: #1A1B22;      /* Kartu mode gelap */
+  --border-color: #272935;    /* Garis tepi mode gelap */
+  --text-color: #F3F4F6;      /* Teks terang */
+  --text-muted: #9CA3AF;      /* Teks sekunder abu-abu */
+  --input-bg: #161720;        /* Latar belakang input gelap */
+}
+
+/* 2. Pengaturan Dasar Halaman */
+body {
+  background-color: var(--bg-color);
+  color: var(--text-color);
+  font-family: 'Plus Jakarta Sans', Inter, sans-serif;
+  transition: background-color 0.35s ease, color 0.35s ease;
+  overflow-x: hidden;
+}
+
+[v-cloak] {
+  display: none !important;
+}
+
+/* 3. Efek Glow Latar Hero */
+.hero-glow-dark {
+  background: radial-gradient(circle at 10% 20%, rgba(255, 45, 32, 0.12) 0%, transparent 40%),
+              radial-gradient(circle at 90% 30%, rgba(59, 130, 246, 0.08) 0%, transparent 45%);
+}
+
+html:not(.dark) .hero-glow-dark {
+  background: radial-gradient(circle at 10% 20%, rgba(230, 80, 50, 0.07) 0%, transparent 45%),
+              radial-gradient(circle at 90% 30%, rgba(217, 119, 6, 0.07) 0%, transparent 45%);
+}
+
+/* 4. Efek Interaktif Hover pada Kartu Buku */
+.hover-card {
+  transition: all 0.28s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.hover-card:hover {
+  transform: translateY(-5px);
+}
+
+html.dark .hover-card:hover {
+  border-color: rgba(255, 45, 32, 0.45);
+  box-shadow: 0 16px 32px -10px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(255, 45, 32, 0.15);
+}
+
+html:not(.dark) .hover-card:hover {
+  border-color: rgba(255, 45, 32, 0.4);
+  box-shadow: 0 16px 28px -10px rgba(130, 70, 20, 0.12), 0 0 0 1px rgba(255, 45, 32, 0.15);
+}
+
+/* 5. Slider Genre Otomatis (Marquee Infinite Loop) */
+@keyframes marqueeSlider {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+.marquee-slider-container {
+  overflow: hidden;
+  white-space: nowrap;
+  position: relative;
+}
+
+.marquee-slider-track {
+  display: inline-flex;
+  gap: 16px;
+  width: max-content;
+  animation: marqueeSlider 24s linear infinite;
+}
+
+.marquee-slider-track:hover {
+  animation-play-state: paused;
+}
+
+/* 6. Tombol Mengambang (Floating Dashboard) */
+.floating-dashboard-btn {
+  position: fixed;
+  bottom: 24px;
+  right: 28px;
+  z-index: 40;
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.4);
+  transition: all 0.25s ease;
+}
+
+.floating-dashboard-btn:hover {
+  transform: translateY(-3px) scale(1.03);
+}
+
+/* 7. Utility: Sembunyikan Scrollbar */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}

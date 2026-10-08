@@ -1,0 +1,111 @@
+<!-- ================= HERO COMPONENT ================= -->
+<section class="relative pt-16 pb-10 sm:pt-24 sm:pb-14 overflow-hidden hero-glow-dark">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center sm:text-left">
+    
+    <div class="max-w-3xl space-y-6">
+      <!-- Platform Badge -->
+      <div class="inline-flex items-center gap-2.5 px-4 py-2 rounded-full border text-xs sm:text-sm font-semibold tracking-wide bg-[#E5DDD0] border-[#D5CABB] dark:bg-[#1A1B24] dark:border-[#282B3A] text-stone-800 dark:text-neutral-300 shadow-sm">
+        <span class="w-2.5 h-2.5 rounded-full bg-red-500"></span>
+        <span>Platform Belajar Coding Bahasa Indonesia</span>
+      </div>
+
+      <!-- Main Title: DESA BACA -->
+      <h1 class="text-5xl sm:text-7xl font-extrabold tracking-tight font-heading leading-none">
+        <span class="text-neutral-900 dark:text-white">DESA</span>
+        <span class="text-red-500">BACA</span>
+      </h1>
+
+      <!-- Subtitle -->
+      <p class="text-base sm:text-lg text-stone-700 dark:text-neutral-400 max-w-xl leading-relaxed">
+        Baca berbagai buku dari berbagai kategori dan genre hanya dalam 15 menit
+      </p>
+
+      <!-- Search Bar -->
+      <div class="pt-2 max-w-xl">
+        <div class="relative flex items-center rounded-2xl border transition-all duration-300 bg-[#FBF8F2] border-[#D8CEBC] shadow-sm focus-within:border-red-500 focus-within:ring-2 focus-within:ring-red-500/20 dark:bg-[#161720] dark:border-[#282A38]">
+          <input 
+            id="heroBookSearch" 
+            v-model="searchQuery"
+            @keyup.enter="doSearch()"
+            type="text" 
+            placeholder="Buku apa yang anda cari?" 
+            class="w-full py-4 pl-5 pr-14 text-sm sm:text-base bg-transparent text-stone-900 dark:text-white placeholder-stone-500 dark:placeholder-neutral-500 focus:outline-none"
+          />
+          <button 
+            @click="doSearch()"
+            aria-label="Cari Buku"
+            class="absolute right-2.5 w-11 h-10 rounded-xl bg-[#DDD3C0] hover:bg-[#D0C4AF] text-stone-800 dark:bg-[#2C2E3C] dark:hover:bg-[#383B4D] dark:text-neutral-200 flex items-center justify-center transition-all">
+            <i class="fa-solid fa-magnifying-glass text-sm"></i>
+          </button>
+        </div>
+        <div v-if="activeSearch" class="mt-2 text-xs font-medium text-stone-700 dark:text-neutral-400 flex items-center gap-2">
+          <span>Hasil pencarian untuk: <strong class="text-red-500">{{ activeSearch }}</strong></span>
+          <button @click="clearSearch" class="text-stone-500 hover:text-red-500 underline text-[11px]">(reset)</button>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+
+  <!-- Genre Automatic Marquee Slider -->
+  <div class="mt-12 border-y border-[#D8CEBC] dark:border-[#222432] py-4 bg-[#E7E0D2]/70 dark:bg-[#14151C]/60 overflow-hidden select-none">
+    <div class="marquee-slider-container">
+      <div class="marquee-slider-track">
+        
+        <!-- Track Set 1 -->
+        <button @click="doSearch('Ide Usaha & Keuangan')" class="filter-pill shrink-0 px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold border transition-all bg-[#F8F4EA] border-[#D8CEBC] text-stone-800 hover:border-red-500 hover:text-red-500 dark:bg-[#1A1B24] dark:border-[#282B3A] dark:text-neutral-200 dark:hover:border-red-500 shadow-sm flex items-center gap-2">
+          <i class="fa-solid fa-sack-dollar text-amber-600 text-xs"></i>
+          Ide Usaha & Keuangan
+        </button>
+
+        <button @click="doSearch('Keluarga, Kesehatan & Anak')" class="filter-pill shrink-0 px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold border transition-all bg-[#F8F4EA] border-[#D8CEBC] text-stone-800 hover:border-red-500 hover:text-red-500 dark:bg-[#1A1B24] dark:border-[#282B3A] dark:text-neutral-200 dark:hover:border-red-500 shadow-sm flex items-center gap-2">
+          <i class="fa-solid fa-people-roof text-sky-600 text-xs"></i>
+          Keluarga, Kesehatan & Anak
+        </button>
+
+        <button @click="doSearch('Kisah Sukses & Inspirasi')" class="filter-pill shrink-0 px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold border transition-all bg-[#F8F4EA] border-[#D8CEBC] text-stone-800 hover:border-red-500 hover:text-red-500 dark:bg-[#1A1B24] dark:border-[#282B3A] dark:text-neutral-200 dark:hover:border-red-500 shadow-sm flex items-center gap-2">
+          <i class="fa-solid fa-trophy text-amber-500 text-xs"></i>
+          Kisah Sukses & Inspirasi
+        </button>
+
+        <button @click="doSearch('Desa Maju & Kepemimpinan')" class="filter-pill shrink-0 px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold border transition-all bg-[#F8F4EA] border-[#D8CEBC] text-stone-800 hover:border-red-500 hover:text-red-500 dark:bg-[#1A1B24] dark:border-[#282B3A] dark:text-neutral-200 dark:hover:border-red-500 shadow-sm flex items-center gap-2">
+          <i class="fa-solid fa-landmark text-emerald-600 text-xs"></i>
+          Desa Maju & Kepemimpinan
+        </button>
+
+        <button @click="doSearch('Pola Pikir & Inovasi Terapan')" class="filter-pill shrink-0 px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold border transition-all bg-[#F8F4EA] border-[#D8CEBC] text-stone-800 hover:border-red-500 hover:text-red-500 dark:bg-[#1A1B24] dark:border-[#282B3A] dark:text-neutral-200 dark:hover:border-red-500 shadow-sm flex items-center gap-2">
+          <i class="fa-solid fa-lightbulb text-red-500 text-xs"></i>
+          Pola Pikir & Inovasi Terapan
+        </button>
+
+        <!-- Track Set 2 (Duplicate for continuous loop) -->
+        <button @click="doSearch('Ide Usaha & Keuangan')" class="filter-pill shrink-0 px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold border transition-all bg-[#F8F4EA] border-[#D8CEBC] text-stone-800 hover:border-red-500 hover:text-red-500 dark:bg-[#1A1B24] dark:border-[#282B3A] dark:text-neutral-200 dark:hover:border-red-500 shadow-sm flex items-center gap-2">
+          <i class="fa-solid fa-sack-dollar text-amber-600 text-xs"></i>
+          Ide Usaha & Keuangan
+        </button>
+
+        <button @click="doSearch('Keluarga, Kesehatan & Anak')" class="filter-pill shrink-0 px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold border transition-all bg-[#F8F4EA] border-[#D8CEBC] text-stone-800 hover:border-red-500 hover:text-red-500 dark:bg-[#1A1B24] dark:border-[#282B3A] dark:text-neutral-200 dark:hover:border-red-500 shadow-sm flex items-center gap-2">
+          <i class="fa-solid fa-people-roof text-sky-600 text-xs"></i>
+          Keluarga, Kesehatan & Anak
+        </button>
+
+        <button @click="doSearch('Kisah Sukses & Inspirasi')" class="filter-pill shrink-0 px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold border transition-all bg-[#F8F4EA] border-[#D8CEBC] text-stone-800 hover:border-red-500 hover:text-red-500 dark:bg-[#1A1B24] dark:border-[#282B3A] dark:text-neutral-200 dark:hover:border-red-500 shadow-sm flex items-center gap-2">
+          <i class="fa-solid fa-trophy text-amber-500 text-xs"></i>
+          Kisah Sukses & Inspirasi
+        </button>
+
+        <button @click="doSearch('Desa Maju & Kepemimpinan')" class="filter-pill shrink-0 px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold border transition-all bg-[#F8F4EA] border-[#D8CEBC] text-stone-800 hover:border-red-500 hover:text-red-500 dark:bg-[#1A1B24] dark:border-[#282B3A] dark:text-neutral-200 dark:hover:border-red-500 shadow-sm flex items-center gap-2">
+          <i class="fa-solid fa-landmark text-emerald-600 text-xs"></i>
+          Desa Maju & Kepemimpinan
+        </button>
+
+        <button @click="doSearch('Pola Pikir & Inovasi Terapan')" class="filter-pill shrink-0 px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold border transition-all bg-[#F8F4EA] border-[#D8CEBC] text-stone-800 hover:border-red-500 hover:text-red-500 dark:bg-[#1A1B24] dark:border-[#282B3A] dark:text-neutral-200 dark:hover:border-red-500 shadow-sm flex items-center gap-2">
+          <i class="fa-solid fa-lightbulb text-red-500 text-xs"></i>
+          Pola Pikir & Inovasi Terapan
+        </button>
+
+      </div>
+    </div>
+  </div>
+</section>

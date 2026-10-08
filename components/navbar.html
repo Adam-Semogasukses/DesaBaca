@@ -1,0 +1,108 @@
+<!-- ================= NAVBAR COMPONENT ================= -->
+<header class="sticky top-0 z-40 backdrop-blur-md border-b transition-colors duration-300 bg-[#EFE8DB]/90 border-[#D8CEBC] dark:bg-[#121316]/90 dark:border-[#222430]">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
+    
+    <!-- Brand Logo -->
+    <a href="#" class="flex items-center gap-3 group">
+      <div class="w-9 h-9 rounded-xl flex items-center justify-center text-white bg-gradient-to-tr from-neutral-800 to-neutral-700 dark:from-neutral-700 dark:to-neutral-600 shadow-sm group-hover:scale-105 transition-transform">
+        <svg class="w-6 h-6 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="2" y="3" width="20" height="14" rx="3" />
+          <line x1="8" y1="21" x2="16" y2="21" />
+          <line x1="12" y1="17" x2="12" y2="21" />
+          <circle cx="8" cy="10" r="1.5" fill="currentColor" />
+          <circle cx="16" cy="10" r="1.5" fill="currentColor" />
+          <path d="M11 13h2" />
+        </svg>
+      </div>
+      <span class="font-extrabold text-lg sm:text-xl font-heading tracking-wider text-neutral-900 dark:text-white">
+        DESA BACA
+      </span>
+    </a>
+
+    <!-- Center Navigation Menus -->
+    <nav class="hidden md:flex items-center gap-8 text-xs sm:text-sm font-bold tracking-wider">
+      <!-- Belajar -->
+      <div class="relative group">
+        <button class="flex items-center gap-1.5 py-2 text-stone-800 hover:text-red-500 dark:text-neutral-300 dark:hover:text-red-400 transition-colors uppercase">
+          BELAJAR
+          <i class="fa-solid fa-chevron-down text-[10px] text-stone-500 dark:text-neutral-500 transition-transform duration-200 group-hover:rotate-180"></i>
+        </button>
+        <div class="absolute left-0 mt-2 w-52 rounded-2xl p-2 opacity-0 translate-y-2 pointer-events-none group-hover:opacity-100 group-hover:translate-y-0 group-hover:pointer-events-auto transition-all duration-200 shadow-xl border bg-[#F8F3EA] border-[#D8CEBC] dark:bg-[#1A1B24] dark:border-[#272938]">
+          <a href="#ebooks" class="flex items-center gap-3 px-3 py-2 rounded-xl text-xs font-semibold hover:bg-stone-200/60 dark:hover:bg-white/5 text-stone-800 dark:text-neutral-200">
+            <i class="fa-solid fa-book-open text-red-500"></i> E-Book Populer
+          </a>
+          <a href="#kategori" class="flex items-center gap-3 px-3 py-2 rounded-xl text-xs font-semibold hover:bg-stone-200/60 dark:hover:bg-white/5 text-stone-800 dark:text-neutral-200">
+            <i class="fa-solid fa-list-check text-red-500"></i> Semua Kategori
+          </a>
+        </div>
+      </div>
+
+      <!-- Dashboard -->
+      <div class="relative group">
+        <a href="dashboard.html" class="flex items-center gap-1.5 py-2 text-stone-800 hover:text-red-500 dark:text-neutral-300 dark:hover:text-red-400 transition-colors uppercase">
+          DASHBOARD
+          <i class="fa-solid fa-chevron-down text-[10px] text-stone-500 dark:text-neutral-500 transition-transform duration-200 group-hover:rotate-180"></i>
+        </a>
+        <div class="absolute left-0 mt-2 w-48 rounded-2xl p-2 opacity-0 translate-y-2 pointer-events-none group-hover:opacity-100 group-hover:translate-y-0 group-hover:pointer-events-auto transition-all duration-200 shadow-xl border bg-[#F8F3EA] border-[#D8CEBC] dark:bg-[#1A1B24] dark:border-[#272938]">
+          <a href="dashboard.html" class="flex items-center gap-3 px-3 py-2 rounded-xl text-xs font-semibold hover:bg-stone-200/60 dark:hover:bg-white/5 text-stone-800 dark:text-neutral-200">
+            <i class="fa-solid fa-chart-pie text-cyan-500"></i> Statistik Membaca
+          </a>
+          <button @click="openAuth('login')" class="w-full text-left flex items-center gap-3 px-3 py-2 rounded-xl text-xs font-semibold hover:bg-stone-200/60 dark:hover:bg-white/5 text-stone-800 dark:text-neutral-200">
+            <i class="fa-solid fa-bookmark text-amber-500"></i> Buku Tersimpan
+          </button>
+        </div>
+      </div>
+
+      <!-- Developer -->
+      <div class="relative group">
+        <button class="flex items-center gap-1.5 py-2 text-stone-800 hover:text-red-500 dark:text-neutral-300 dark:hover:text-red-400 transition-colors uppercase">
+          DEVELOPER
+          <i class="fa-solid fa-chevron-down text-[10px] text-stone-500 dark:text-neutral-500 transition-transform duration-200 group-hover:rotate-180"></i>
+        </button>
+        <div class="absolute left-0 mt-2 w-48 rounded-2xl p-2 opacity-0 translate-y-2 pointer-events-none group-hover:opacity-100 group-hover:translate-y-0 group-hover:pointer-events-auto transition-all duration-200 shadow-xl border bg-[#F8F3EA] border-[#D8CEBC] dark:bg-[#1A1B24] dark:border-[#272938]">
+          <a href="#tech-stack" class="flex items-center gap-3 px-3 py-2 rounded-xl text-xs font-semibold hover:bg-stone-200/60 dark:hover:bg-white/5 text-stone-800 dark:text-neutral-200">
+            <i class="fa-solid fa-code text-emerald-500"></i> Tech Stack
+          </a>
+          <a href="#footer" class="flex items-center gap-3 px-3 py-2 rounded-xl text-xs font-semibold hover:bg-stone-200/60 dark:hover:bg-white/5 text-stone-800 dark:text-neutral-200">
+            <i class="fa-solid fa-circle-info text-red-500"></i> Tentang Kami
+          </a>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Right Actions -->
+    <div class="flex items-center gap-3">
+      <!-- Theme Toggle (Moon/Sun) -->
+      <button 
+        @click="toggleTheme" 
+        aria-label="Ganti Tema (Dark/Light)" 
+        class="flex items-center gap-2 px-3.5 py-2 rounded-2xl border transition-all active:scale-95 bg-[#E2D9CA] border-[#D1C6B4] hover:bg-[#D7CDBC] text-stone-800 dark:bg-[#1E202B] dark:border-[#2D303F] dark:hover:bg-[#282B3A] dark:text-neutral-200 shadow-sm text-xs font-bold"
+        title="Klik untuk ganti tema (Gelap / Putih Warm)"
+      >
+        <i v-if="isDark" class="fa-solid fa-moon text-amber-400 text-sm"></i>
+        <i v-else class="fa-solid fa-sun text-amber-600 text-sm"></i>
+        <span class="hidden sm:inline">{{ isDark ? 'Mode Gelap' : 'Mode Terang' }}</span>
+      </button>
+
+      <!-- Mobile Hamburger Button -->
+      <button 
+        @click="mobileMenuOpen = !mobileMenuOpen" 
+        aria-label="Toggle Menu" 
+        class="md:hidden w-10 h-10 rounded-2xl border flex items-center justify-center text-stone-800 dark:text-neutral-300 bg-[#E2D9CA] border-[#D1C6B4] dark:bg-[#1E202B] dark:border-[#2D303F]"
+      >
+        <i class="fa-solid fa-bars text-base"></i>
+      </button>
+    </div>
+
+  </div>
+
+  <!-- Mobile Drawer Menu -->
+  <div v-show="mobileMenuOpen" class="md:hidden border-t px-6 py-4 bg-[#EFE8DB] dark:bg-[#15161F] border-[#D8CEBC] dark:border-[#222432] space-y-3 text-sm font-semibold">
+    <a href="#ebooks" class="block py-2 text-stone-800 dark:text-neutral-200 hover:text-red-500">BELAJAR</a>
+    <a href="dashboard.html" class="block py-2 text-stone-800 dark:text-neutral-200 hover:text-red-500">DASHBOARD</a>
+    <a href="#tech-stack" class="block py-2 text-stone-800 dark:text-neutral-200 hover:text-red-500">DEVELOPER</a>
+    <button @click="openAuth('login')" class="w-full text-left py-2 text-red-500 font-bold border-t border-[#D8CEBC] dark:border-[#222432] mt-2">
+      <i class="fa-solid fa-arrow-right-to-bracket mr-2"></i> Masuk / Daftar Akun
+    </button>
+  </div>
+</header>

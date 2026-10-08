@@ -1,0 +1,205 @@
+<!-- ================= AUTHENTICATION MODAL ================= -->
+<div 
+  class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/65 backdrop-blur-sm transition-all duration-300"
+  :class="authModal.open ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'"
+  @click.self="closeAuth"
+>
+  
+  <!-- Modal Card Box -->
+  <div 
+    class="relative w-full max-w-md rounded-3xl p-6 sm:p-8 border shadow-2xl transition-all duration-300 transform bg-[#F8F3EA] border-[#D8CEBC] text-stone-900 dark:bg-[#181922] dark:border-[#282B3A] dark:text-white"
+    :class="authModal.open ? 'scale-100' : 'scale-95'"
+  >
+    
+    <!-- Close Button (X) -->
+    <button @click="closeAuth" aria-label="Tutup" class="absolute top-5 right-5 w-8 h-8 rounded-full flex items-center justify-center bg-stone-300/60 dark:bg-white/10 hover:bg-red-500 hover:text-white dark:hover:bg-red-500 transition-all text-stone-600 dark:text-neutral-400">
+      <i class="fa-solid fa-xmark text-sm"></i>
+    </button>
+
+    <!-- Modal Header -->
+    <div class="text-center mb-6">
+      <div class="w-12 h-12 mx-auto rounded-2xl flex items-center justify-center bg-gradient-to-tr from-red-600 to-rose-500 text-white shadow-lg shadow-red-500/25 mb-3">
+        <svg class="w-7 h-7" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <rect x="2" y="3" width="20" height="14" rx="3" />
+          <circle cx="8" cy="10" r="1.5" fill="currentColor" />
+          <circle cx="16" cy="10" r="1.5" fill="currentColor" />
+        </svg>
+      </div>
+      <h3 class="text-xl font-extrabold tracking-tight font-heading">
+        {{ authModal.tab === 'login' ? 'Masuk ke Desa Baca' : 'Daftar Akun Baru' }}
+      </h3>
+      <p class="text-xs text-stone-600 dark:text-neutral-400 mt-1">
+        {{ authModal.tab === 'login' ? 'Akses ribuan ringkasan buku dan fitur eksklusif lainnya' : 'Daftar instan cukup nama & password saja' }}
+      </p>
+    </div>
+
+    <!-- Tab Switch: Masuk / Daftar -->
+    <div class="grid grid-cols-2 p-1 rounded-2xl bg-[#E8DFC9] dark:bg-[#12131A] border border-[#D5CABB] dark:border-[#272938] mb-6">
+      <button 
+        @click="authModal.tab = 'login'" 
+        class="py-2.5 rounded-xl text-xs font-bold transition-all"
+        :class="authModal.tab === 'login' ? 'bg-[#F8F3EA] dark:bg-[#1F202D] text-stone-900 dark:text-white shadow-sm' : 'text-stone-600 dark:text-neutral-400 hover:text-stone-900 dark:hover:text-white'"
+      >
+        Masuk
+      </button>
+      <button 
+        @click="authModal.tab = 'register'" 
+        class="py-2.5 rounded-xl text-xs font-bold transition-all"
+        :class="authModal.tab === 'register' ? 'bg-[#F8F3EA] dark:bg-[#1F202D] text-stone-900 dark:text-white shadow-sm' : 'text-stone-600 dark:text-neutral-400 hover:text-stone-900 dark:hover:text-white'"
+      >
+        Daftar Baru
+      </button>
+    </div>
+
+    <!-- Social Logins (Google & Facebook) -->
+    <div class="space-y-2.5 mb-5">
+      <!-- Google -->
+      <button @click="handleSocial('Google')" type="button" class="w-full py-3 px-4 rounded-2xl border font-bold text-xs sm:text-sm flex items-center justify-center gap-3 transition-all bg-white border-[#D8CEBC] text-stone-800 hover:border-red-500 dark:bg-[#1F202D] dark:border-[#2A2C3C] dark:text-white dark:hover:border-red-500 shadow-sm active:scale-98">
+        <svg class="w-4 h-4" viewBox="0 0 24 24">
+          <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+          <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+          <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z"/>
+          <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"/>
+        </svg>
+        <span><a href="https://accounts.google.com/login?hl=in">Lanjutkan dengan Google</a></span>
+      </button>
+
+      <!-- Facebook -->
+      <button @click="handleSocial('Facebook')" type="button" class="w-full py-3 px-4 rounded-2xl border font-bold text-xs sm:text-sm flex items-center justify-center gap-3 transition-all bg-[#1877F2] border-[#1877F2] text-white hover:bg-[#166FE5] shadow-sm active:scale-98">
+        <i class="fa-brands fa-facebook-f text-sm"></i>
+        <span>Lanjutkan dengan Facebook</span>
+      </button>
+    </div>
+
+    <!-- Divider -->
+    <div class="relative flex items-center justify-center my-5">
+      <div class="border-t w-full border-[#D8CEBC] dark:border-[#2A2C3C]"></div>
+      <span class="bg-[#F8F3EA] dark:bg-[#181922] px-3 text-[11px] font-semibold text-stone-500 uppercase tracking-wider absolute">
+        atau
+      </span>
+    </div>
+
+    <!-- FORM: LOGIN -->
+    <form v-if="authModal.tab === 'login'" @submit.prevent="handleLogin" class="space-y-4">
+      <div>
+        <label class="block text-xs font-bold uppercase tracking-wider mb-1.5 text-stone-700 dark:text-neutral-300">
+          Nama Pengguna / Akun
+        </label>
+        <div class="relative">
+          <input 
+            v-model="authModal.loginName"
+            type="text" 
+            required
+            placeholder="Masukkan nama Anda" 
+            class="w-full py-3 pl-10 pr-4 text-xs sm:text-sm rounded-2xl border bg-[#EFE8DB] border-[#D5CABB] text-stone-900 placeholder-stone-400 focus:outline-none focus:border-red-500 dark:bg-[#12131A] dark:border-[#272938] dark:text-white"
+          />
+          <i class="fa-regular fa-user absolute left-3.5 top-1/2 -translate-y-1/2 text-stone-400 text-xs"></i>
+        </div>
+      </div>
+
+      <div>
+        <label class="block text-xs font-bold uppercase tracking-wider mb-1.5 text-stone-700 dark:text-neutral-300">
+          Kata Sandi
+        </label>
+        <div class="relative">
+          <input 
+            v-model="authModal.loginPass"
+            :type="authModal.showPass ? 'text' : 'password'"
+            required
+            placeholder="Masukkan kata sandi" 
+            class="w-full py-3 pl-10 pr-10 text-xs sm:text-sm rounded-2xl border bg-[#EFE8DB] border-[#D5CABB] text-stone-900 placeholder-stone-400 focus:outline-none focus:border-red-500 dark:bg-[#12131A] dark:border-[#272938] dark:text-white"
+          />
+          <i class="fa-solid fa-lock absolute left-3.5 top-1/2 -translate-y-1/2 text-stone-400 text-xs"></i>
+          <button @click="authModal.showPass = !authModal.showPass" type="button" class="absolute right-3.5 top-1/2 -translate-y-1/2 text-stone-400 hover:text-stone-700 dark:hover:text-white">
+            <i class="fa-regular text-xs" :class="authModal.showPass ? 'fa-eye-slash' : 'fa-eye'"></i>
+          </button>
+        </div>
+      </div>
+
+      <button type="submit" class="w-full py-3.5 rounded-2xl font-bold text-xs sm:text-sm uppercase tracking-wider transition-all bg-red-600 hover:bg-red-500 text-white shadow-lg shadow-red-600/30 flex items-center justify-center gap-2 active:scale-98">
+        <span>Masuk Sekarang</span>
+        <i class="fa-solid fa-arrow-right text-xs"></i>
+      </button>
+
+      <p class="text-center text-xs text-stone-600 dark:text-neutral-400 pt-2">
+        Belum punya akun? 
+        <button @click="authModal.tab = 'register'" type="button" class="font-extrabold text-red-500 hover:underline">
+          Daftar sekarang (Hanya Nama &amp; Password)
+        </button>
+      </p>
+    </form>
+
+    <!-- FORM: REGISTER -->
+    <form v-if="authModal.tab === 'register'" @submit.prevent="handleRegister" class="space-y-4">
+      <div class="p-3 rounded-2xl bg-amber-500/10 border border-amber-500/20 text-[11px] text-amber-800 dark:text-amber-300">
+        <i class="fa-solid fa-bolt mr-1"></i>
+        Pendaftaran instan: <strong>hanya butuh Nama dan Password</strong> tanpa perlu verifikasi email rumit!
+      </div>
+
+      <div>
+        <label class="block text-xs font-bold uppercase tracking-wider mb-1.5 text-stone-700 dark:text-neutral-300">
+          Nama Lengkap
+        </label>
+        <div class="relative">
+          <input 
+            v-model="authModal.regName"
+            type="text" 
+            required
+            placeholder="Contoh: Budi Santoso" 
+            class="w-full py-3 pl-10 pr-4 text-xs sm:text-sm rounded-2xl border bg-[#EFE8DB] border-[#D5CABB] text-stone-900 placeholder-stone-400 focus:outline-none focus:border-red-500 dark:bg-[#12131A] dark:border-[#272938] dark:text-white"
+          />
+          <i class="fa-regular fa-user absolute left-3.5 top-1/2 -translate-y-1/2 text-stone-400 text-xs"></i>
+        </div>
+      </div>
+
+      <div>
+        <label class="block text-xs font-bold uppercase tracking-wider mb-1.5 text-stone-700 dark:text-neutral-300">
+          Kata Sandi Baru
+        </label>
+        <div class="relative">
+          <input 
+            v-model="authModal.regPass"
+            :type="authModal.showPass ? 'text' : 'password'"
+            required
+            placeholder="Buat kata sandi minimal 6 karakter" 
+            class="w-full py-3 pl-10 pr-10 text-xs sm:text-sm rounded-2xl border bg-[#EFE8DB] border-[#D5CABB] text-stone-900 placeholder-stone-400 focus:outline-none focus:border-red-500 dark:bg-[#12131A] dark:border-[#272938] dark:text-white"
+          />
+          <i class="fa-solid fa-lock absolute left-3.5 top-1/2 -translate-y-1/2 text-stone-400 text-xs"></i>
+          <button @click="authModal.showPass = !authModal.showPass" type="button" class="absolute right-3.5 top-1/2 -translate-y-1/2 text-stone-400 hover:text-stone-700 dark:hover:text-white">
+            <i class="fa-regular text-xs" :class="authModal.showPass ? 'fa-eye-slash' : 'fa-eye'"></i>
+          </button>
+        </div>
+      </div>
+
+      <button type="submit" class="w-full py-3.5 rounded-2xl font-bold text-xs sm:text-sm uppercase tracking-wider transition-all bg-red-600 hover:bg-red-500 text-white shadow-lg shadow-red-600/30 flex items-center justify-center gap-2 active:scale-98">
+        <span>Daftar Akun Baru</span>
+        <i class="fa-solid fa-check text-xs"></i>
+      </button>
+
+      <p class="text-center text-xs text-stone-600 dark:text-neutral-400 pt-2">
+        Sudah punya akun? 
+        <button @click="authModal.tab = 'login'" type="button" class="font-extrabold text-red-500 hover:underline">
+          Masuk di sini
+        </button>
+      </p>
+    </form>
+
+  </div>
+</div>
+
+
+<!-- ================= FLOATING DASHBOARD BUTTON ================= -->
+<a href="dashboard.html" class="floating-dashboard-btn flex items-center gap-2.5 px-5 py-3 rounded-full text-xs font-extrabold uppercase tracking-wider border transition-all bg-neutral-900 border-neutral-700 text-white hover:bg-neutral-800 dark:bg-[#1E202B] dark:border-[#34384B] dark:text-neutral-100 dark:hover:bg-[#272A39]">
+  <span>Dashboard</span>
+  <i class="fa-solid fa-arrow-right text-xs"></i>
+</a>
+
+
+<!-- ================= TOAST NOTIFICATION ================= -->
+<div 
+  class="fixed top-24 right-5 z-50 transform transition-all duration-300 flex items-center gap-3 px-5 py-3.5 rounded-2xl shadow-xl bg-neutral-900 text-white border border-neutral-700 text-xs sm:text-sm"
+  :class="toast.show ? 'translate-x-0 opacity-100' : 'translate-x-32 opacity-0 pointer-events-none'"
+>
+  <i :class="toast.type === 'error' ? 'fa-solid fa-circle-xmark text-red-400 text-base' : 'fa-solid fa-circle-check text-emerald-400 text-base'"></i>
+  <span>{{ toast.message }}</span>
+</div>

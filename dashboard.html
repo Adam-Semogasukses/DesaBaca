@@ -1,0 +1,684 @@
+<!DOCTYPE html>
+<html lang="id" class="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>DASHBOARD HOME - DESA BACA</title>
+  <meta name="description" content="Dashboard pembelajaran dan progres membaca buku di Desa Baca." />
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <!-- FontAwesome 6 Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['"Plus Jakarta Sans"', 'Inter', 'sans-serif'],
+            heading: ['"Plus Jakarta Sans"', 'sans-serif'],
+          },
+          colors: {
+            warm: {
+              bg:     '#EFE8DB',
+              card:   '#F8F3EA',
+              border: '#D8CEBC',
+              text:   '#231E18',
+            }
+          }
+        }
+      }
+    }
+  </script>
+
+  <!-- Inisialisasi tema sebelum render -->
+  <script>
+    (function() {
+      const t = localStorage.getItem('desabaca_theme') || 'dark';
+      if (t !== 'dark') document.documentElement.classList.remove('dark');
+    })();
+  </script>
+
+  <style>
+    [v-cloak] { display: none !important; }
+    
+    ::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    ::-webkit-scrollbar-track {
+      background: transparent;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #2b2e3e;
+      border-radius: 9999px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #3c4056;
+    }
+  </style>
+</head>
+
+<body class="min-h-screen bg-[#EFE8DB] text-stone-900 dark:bg-[#101115] dark:text-[#F3F4F6] selection:bg-red-500 selection:text-white transition-colors duration-300">
+  
+  <!-- LAYOUT v4: tinggi dikunci setinggi layar (dvh); sidebar diam, hanya <main> yang scroll.
+         Mobile (<md): ikon navigasi pindah ke bawah (bottom bar). md: rail kiri. lg: sub-sidebar muncul. -->
+  <div id="app" v-cloak class="h-screen h-[100dvh] overflow-hidden flex flex-col">
+
+    <!-- Top Status Bar: Title & Back link -->
+    <header class="shrink-0 px-3 sm:px-5 py-3 border-b flex items-center justify-between text-xs transition-colors duration-300 bg-[#E5DDD0] border-[#D8CEBC] text-stone-700 dark:bg-[#14151B] dark:border-[#20222D] dark:text-neutral-400">
+      <div class="flex items-center gap-3">
+        <span class="font-extrabold tracking-wider uppercase font-heading text-stone-900 dark:text-neutral-300">DASHBOARD HOME</span>
+      </div>
+      <div class="flex items-center gap-4">
+        <a href="index.html" class="flex items-center gap-1.5 font-bold hover:text-red-500 transition-colors">
+          <i class="fa-solid fa-arrow-left text-[11px]"></i>
+          <span>Kembali ke Beranda</span>
+        </a>
+      </div>
+    </header>
+
+    <!-- Main Workspace Container -->
+    <div class="flex-1 min-h-0 flex flex-col-reverse md:flex-row overflow-hidden">
+
+      <!-- ================= 1. NARROW ICON RAIL (FAR LEFT) ================= -->
+      <aside class="w-full md:w-[72px] shrink-0 border-t md:border-t-0 md:border-r flex flex-row md:flex-col items-center justify-between px-4 md:px-0 py-2 md:py-5 min-h-[4rem] pb-[max(0.5rem,env(safe-area-inset-bottom))] md:pb-5 transition-colors duration-300 bg-[#ECE4D5] border-[#D8CEBC] dark:bg-[#16171E] dark:border-[#242633]">
+        
+        <!-- Top: Logo / Avatar Icon -->
+        <div class="flex flex-row md:flex-col items-center gap-3 md:gap-6">
+          <a href="index.html" class="w-10 h-10 rounded-full border flex items-center justify-center transition-all shadow-sm group bg-[#F8F3EA] border-[#D8CEBC] text-stone-800 dark:bg-[#252735] dark:border-[#35384B] dark:text-white hover:border-red-500" title="Beranda Desa Baca">
+            <i class="fa-solid fa-lightbulb text-sm group-hover:text-red-500 transition-colors"></i>
+          </a>
+
+          <!-- Nav Icons Stack -->
+          <nav class="flex flex-row md:flex-col items-center gap-1.5 sm:gap-3 md:gap-4">
+            <!-- Dashboard Grid -->
+            <button 
+              @click="activeView = 'dashboard'"
+              aria-label="Dashboard" 
+              class="w-10 h-10 rounded-xl flex items-center justify-center transition-all"
+              :class="activeView === 'dashboard' ? 'bg-[#DCD0BE] dark:bg-[#282A38] text-stone-900 dark:text-white border border-[#CBBDA8] dark:border-[#3B3E52] shadow-sm' : 'text-stone-500 dark:text-neutral-400 hover:text-stone-900 dark:hover:text-white'"
+              title="Dashboard"
+            >
+              <i class="fa-solid fa-table-cells-large text-base"></i>
+            </button>
+
+            <!-- Learning / Progres -->
+            <button 
+              onclick="window.location.href='baca.html'"
+              aria-label="Progres Baca" 
+              class="w-10 h-10 rounded-xl flex items-center justify-center transition-all"
+              :class="activeView === 'progres' ? 'bg-[#DCD0BE] dark:bg-[#282A38] text-stone-900 dark:text-white border border-[#CBBDA8] dark:border-[#3B3E52] shadow-sm' : 'text-stone-500 dark:text-neutral-400 hover:text-stone-900 dark:hover:text-white'"
+              title="Progres Baca"
+            >
+              <i class="fa-solid fa-graduation-cap text-base"></i>
+            </button>
+
+            <!-- Bookmarks -->
+            <button 
+              @click="activeView = 'bookmarks'"
+              aria-label="Buku Tersimpan" 
+              class="w-10 h-10 rounded-xl flex items-center justify-center transition-all"
+              :class="activeView === 'bookmarks' ? 'bg-[#DCD0BE] dark:bg-[#282A38] text-stone-900 dark:text-white border border-[#CBBDA8] dark:border-[#3B3E52] shadow-sm' : 'text-stone-500 dark:text-neutral-400 hover:text-stone-900 dark:hover:text-white'"
+              title="Buku Tersimpan"
+            >
+              <i class="fa-regular fa-bookmark text-base"></i>
+            </button>
+
+            <!-- Analytics / Riwayat -->
+            <button 
+              @click="activeView = 'riwayat'"
+              aria-label="Riwayat Baca" 
+              class="w-10 h-10 rounded-xl flex items-center justify-center transition-all"
+              :class="activeView === 'riwayat' ? 'bg-[#DCD0BE] dark:bg-[#282A38] text-stone-900 dark:text-white border border-[#CBBDA8] dark:border-[#3B3E52] shadow-sm' : 'text-stone-500 dark:text-neutral-400 hover:text-stone-900 dark:hover:text-white'"
+              title="Riwayat Baca"
+            >
+              <i class="fa-solid fa-chart-column text-base"></i>
+            </button>
+          </nav>
+        </div>
+
+        <!-- Bottom: User Circle / Theme Switcher -->
+        <button 
+          @click="toggleTheme" 
+          aria-label="Ganti Tema" 
+          class="w-8 h-8 rounded-full border shadow-md active:scale-95 transition-all flex items-center justify-center bg-white dark:bg-[#1F202D] border-stone-300 dark:border-neutral-600 hover:ring-2 hover:ring-red-500"
+          :title="isDark ? 'Beralih ke Mode Terang Warm' : 'Beralih ke Mode Gelap'"
+        >
+          <i v-if="isDark" class="fa-solid fa-moon text-xs text-amber-400"></i>
+          <i v-else class="fa-solid fa-sun text-xs text-amber-600"></i>
+        </button>
+      </aside>
+
+
+      <!-- ================= 2. SUB-NAV SIDEBAR (OVERVIEW) ================= -->
+      <aside class="w-56 shrink-0 border-r p-5 hidden lg:flex flex-col justify-between overflow-y-auto transition-colors duration-300 bg-[#ECE4D5] border-[#D8CEBC] dark:bg-[#16171E] dark:border-[#242633]">
+        <div>
+          <!-- Title -->
+          <h2 class="text-base font-extrabold font-heading tracking-wide mb-6 text-stone-900 dark:text-white">
+            Dashboard
+          </h2>
+
+          <!-- Section Label -->
+          <p class="text-[11px] font-bold uppercase tracking-wider mb-2 text-stone-500 dark:text-neutral-400">
+            Overview
+          </p>
+
+          <!-- Navigation Links -->
+          <div class="space-y-1.5">
+            <button 
+              @click="activeView = 'dashboard'"
+              class="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-bold transition-all text-left"
+              :class="activeView === 'dashboard' ? 'bg-[#DCD0BE] dark:bg-[#282A38] text-stone-900 dark:text-white shadow-sm border border-[#CBBDA8] dark:border-[#373A4D]' : 'text-stone-600 dark:text-neutral-400 hover:text-stone-900 dark:hover:text-white'"
+            >
+              <i class="fa-solid fa-table-cells-large text-xs"></i>
+              <span>Dashboard</span>
+            </button>
+
+            <button 
+              onclick="window.location.href='baca.html'"
+              class="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-semibold transition-all text-left"
+              :class="activeView === 'progres' ? 'bg-[#DCD0BE] dark:bg-[#282A38] text-stone-900 dark:text-white shadow-sm border border-[#CBBDA8] dark:border-[#373A4D]' : 'text-stone-600 dark:text-neutral-400 hover:text-stone-900 dark:hover:text-white'"
+            >
+              <i class="fa-solid fa-chart-line text-xs"></i>
+              <span>Progres Baca</span>
+            </button>
+
+            <button 
+              @click="activeView = 'riwayat'"
+              class="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-semibold transition-all text-left"
+              :class="activeView === 'riwayat' ? 'bg-[#DCD0BE] dark:bg-[#282A38] text-stone-900 dark:text-white shadow-sm border border-[#CBBDA8] dark:border-[#373A4D]' : 'text-stone-600 dark:text-neutral-400 hover:text-stone-900 dark:hover:text-white'"
+            >
+              <i class="fa-solid fa-clock-rotate-left text-xs"></i>
+              <span>Riwayat Baca</span>
+            </button>
+
+            <button 
+              @click="activeView = 'bookmarks'"
+              class="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-semibold transition-all text-left"
+              :class="activeView === 'bookmarks' ? 'bg-[#DCD0BE] dark:bg-[#282A38] text-stone-900 dark:text-white shadow-sm border border-[#CBBDA8] dark:border-[#373A4D]' : 'text-stone-600 dark:text-neutral-400 hover:text-stone-900 dark:hover:text-white'"
+            >
+              <i class="fa-regular fa-bookmark text-xs"></i>
+              <span>Buku Tersimpan</span>
+              <span v-if="stats.bookmarks" class="ml-auto text-[10px] font-extrabold px-1.5 py-0.5 rounded-md bg-red-500/10 text-red-500">{{ stats.bookmarks }}</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- User Info Footer in Sidebar -->
+        <div class="pt-4 border-t border-[#D8CEBC] dark:border-[#242633] text-xs">
+          <p class="text-[10px] uppercase font-bold text-stone-500 dark:text-neutral-400 tracking-wider">Akun Aktif</p>
+          <p class="font-bold text-stone-800 dark:text-neutral-200 mt-0.5 truncate">{{ userProfile.name }}</p>
+        </div>
+      </aside>
+
+
+      <!-- ================= 3. MAIN DASHBOARD CONTENT ================= -->
+      <main class="flex-1 min-w-0 min-h-0 overflow-y-auto overscroll-contain p-3 sm:p-6 lg:p-8 bg-[#EFE8DB] dark:bg-[#101115] transition-colors duration-300">
+        
+        <!-- Large Outer Frame Card (Matches Mockup) -->
+        <template v-if="activeView === 'dashboard'">
+        <div class="w-full max-w-7xl mx-auto rounded-2xl sm:rounded-3xl border shadow-2xl p-4 sm:p-7 space-y-6 transition-colors duration-300 bg-[#F8F3EA] border-[#D8CEBC] dark:bg-[#14151C]/90 dark:border-[#242634]">
+
+          <!-- ROW 1: 4 TOP STAT CARDS -->
+          <div class="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-5">
+            
+            <!-- Card 1: Progres Belajar -->
+            <div class="rounded-2xl border p-3.5 sm:p-5 flex flex-col justify-between transition-all bg-[#EFE8DB] border-[#D8CEBC] dark:bg-[#1A1B24] dark:border-[#262837] hover:border-red-500/50">
+              <div>
+                <span class="text-xs font-bold text-stone-500 dark:text-neutral-400 tracking-wide">Progres Belajar</span>
+                <div class="flex items-center justify-between mt-3">
+                  <span class="text-2xl sm:text-4xl font-extrabold text-stone-900 dark:text-white font-heading">{{ stats.opened }}</span>
+                  <div class="w-10 h-10 rounded-xl bg-blue-100 border border-blue-200 text-blue-600 dark:bg-[#111C35] dark:border-blue-900/50 dark:text-blue-400 flex items-center justify-center shadow-sm">
+                    <i class="fa-solid fa-graduation-cap text-base"></i>
+                  </div>
+                </div>
+                <p class="text-xs font-semibold text-stone-700 dark:text-neutral-300 mt-2">Buku Terbaca</p>
+              </div>
+              <p class="text-[11px] text-stone-500 dark:text-neutral-400 mt-3 pt-3 border-t border-[#D8CEBC] dark:border-[#242635] leading-tight">
+                Semua buku yang Anda pernah buka
+              </p>
+            </div>
+
+            <!-- Card 2: Buku Selsai -->
+            <div class="rounded-2xl border p-3.5 sm:p-5 flex flex-col justify-between transition-all bg-[#EFE8DB] border-[#D8CEBC] dark:bg-[#1A1B24] dark:border-[#262837] hover:border-emerald-500/50">
+              <div>
+                <span class="text-xs font-bold text-stone-500 dark:text-neutral-400 tracking-wide">Buku Selsai</span>
+                <div class="flex items-center justify-between mt-3">
+                  <span class="text-2xl sm:text-4xl font-extrabold text-emerald-600 dark:text-emerald-400 font-heading">{{ stats.completed }}</span>
+                  <div class="w-10 h-10 rounded-xl bg-emerald-100 border border-emerald-200 text-emerald-600 dark:bg-[#092618] dark:border-emerald-900/50 dark:text-emerald-400 flex items-center justify-center shadow-sm">
+                    <i class="fa-regular fa-circle-check text-base"></i>
+                  </div>
+                </div>
+                <p class="text-xs font-semibold text-stone-700 dark:text-neutral-300 mt-2">Buku Terbaca</p>
+              </div>
+              <p class="text-[11px] text-stone-500 dark:text-neutral-400 mt-3 pt-3 border-t border-[#D8CEBC] dark:border-[#242635] leading-tight">
+                Semua buku yang Anda selesaikan
+              </p>
+            </div>
+
+            <!-- Card 3: Buku Dibaca -->
+            <div class="rounded-2xl border p-3.5 sm:p-5 flex flex-col justify-between transition-all bg-[#EFE8DB] border-[#D8CEBC] dark:bg-[#1A1B24] dark:border-[#262837] hover:border-amber-500/50">
+              <div>
+                <span class="text-xs font-bold text-stone-500 dark:text-neutral-400 tracking-wide">Buku Dibaca</span>
+                <div class="flex items-center justify-between mt-3">
+                  <span class="text-2xl sm:text-4xl font-extrabold text-amber-600 dark:text-amber-500 font-heading">{{ stats.in_progress }}</span>
+                  <div class="w-10 h-10 rounded-xl bg-amber-100 border border-amber-200 text-amber-600 dark:bg-[#2A1907] dark:border-amber-900/50 dark:text-amber-500 flex items-center justify-center shadow-sm">
+                    <i class="fa-regular fa-clock text-base"></i>
+                  </div>
+                </div>
+                <p class="text-xs font-semibold text-stone-700 dark:text-neutral-300 mt-2">Buku Sedang Dibaca</p>
+              </div>
+              <p class="text-[11px] text-stone-500 dark:text-neutral-400 mt-3 pt-3 border-t border-[#D8CEBC] dark:border-[#242635] leading-tight">
+                Semua buku yang sedang Anda baca
+              </p>
+            </div>
+
+            <!-- Card 4: Waktu Membaca -->
+            <div class="rounded-2xl border p-3.5 sm:p-5 flex flex-col justify-between transition-all bg-[#EFE8DB] border-[#D8CEBC] dark:bg-[#1A1B24] dark:border-[#262837] hover:border-purple-500/50">
+              <div>
+                <span class="text-xs font-bold text-stone-500 dark:text-neutral-400 tracking-wide">Waktu Membaca</span>
+                <div class="flex items-center justify-between mt-3">
+                  <span class="text-2xl sm:text-4xl font-extrabold text-purple-600 dark:text-purple-400 font-heading">{{ stats.minutes }}</span>
+                  <div class="w-10 h-10 rounded-xl bg-purple-100 border border-purple-200 text-purple-600 dark:bg-[#240B3B] dark:border-purple-900/50 dark:text-purple-400 flex items-center justify-center shadow-sm">
+                    <i class="fa-solid fa-book-open-reader text-base"></i>
+                  </div>
+                </div>
+                <p class="text-xs font-semibold text-stone-700 dark:text-neutral-300 mt-2">Total Menit</p>
+              </div>
+              <p class="text-[11px] text-stone-500 dark:text-neutral-400 mt-3 pt-3 border-t border-[#D8CEBC] dark:border-[#242635] leading-tight">
+                Waktu yang Anda habiskan untuk baca
+              </p>
+            </div>
+
+          </div>
+
+
+          <!-- ROW 2: LOWER SECTION (2 COLUMNS: LEFT 65%, RIGHT 35%) -->
+          <div class="grid grid-cols-1 lg:grid-cols-12 gap-5 items-start">
+            
+            <!-- LEFT 8 COLUMNS: PROGRES BELAJAR & STATS -->
+            <div class="lg:col-span-8 space-y-5">
+              
+              <!-- Card: Progres Belajar Progress Bar -->
+              <div class="rounded-2xl border p-6 bg-[#EFE8DB] border-[#D8CEBC] dark:bg-[#1A1B24] dark:border-[#262837]">
+                <span class="text-xs font-bold text-stone-500 dark:text-neutral-400 tracking-wide">Progres Belajar</span>
+                
+                <div class="flex items-center justify-between mt-6">
+                  <span class="text-xs font-semibold text-stone-700 dark:text-neutral-300">Total Penyelesaian</span>
+                  <span class="text-sm font-extrabold text-blue-600 dark:text-blue-400 font-heading">{{ stats.completion_pct }}%</span>
+                </div>
+
+                <!-- Progress Bar Track -->
+                <div class="w-full h-3 rounded-full bg-[#DDD4C3] dark:bg-[#252838] mt-3 overflow-hidden">
+                  <div class="h-full bg-blue-500 rounded-full transition-all duration-500" :style="{ width: stats.completion_pct + '%' }"></div>
+                </div>
+
+                <!-- Status Subtext -->
+                <div class="flex items-center justify-between text-xs text-stone-500 dark:text-neutral-400 mt-4">
+                  <span>{{ stats.completed }} Selesai</span>
+                  <span>{{ stats.in_progress }} sedang dibaca</span>
+                </div>
+              </div>
+
+              <!-- Two Bottom Stat Cards Side-by-Side -->
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                
+                <!-- Stat 1: Jam dihabiskan untuk membaca -->
+                <div class="rounded-2xl border p-5 flex items-center gap-4 bg-[#EFE8DB] border-[#D8CEBC] dark:bg-[#1A1B24] dark:border-[#262837]">
+                  <div class="w-12 h-12 rounded-xl bg-emerald-100 border border-emerald-200 text-emerald-600 dark:bg-[#0B2619] dark:border-emerald-900/60 dark:text-emerald-400 flex items-center justify-center shrink-0">
+                    <i class="fa-regular fa-clock text-lg"></i>
+                  </div>
+                  <div>
+                    <span class="text-2xl font-extrabold text-stone-900 dark:text-white font-heading">{{ stats.hours }}</span>
+                    <p class="text-xs text-stone-600 dark:text-neutral-400 font-medium leading-snug">
+                      Jam dihabiskan untuk membaca
+                    </p>
+                  </div>
+                </div>
+
+                <!-- Stat 2: Rentetan Hari Membaca -->
+                <div class="rounded-2xl border p-5 flex items-center gap-4 bg-[#EFE8DB] border-[#D8CEBC] dark:bg-[#1A1B24] dark:border-[#262837]">
+                  <div class="w-12 h-12 rounded-xl bg-amber-100 border border-amber-200 text-amber-600 dark:bg-[#2A1608] dark:border-amber-900/60 dark:text-amber-500 flex items-center justify-center shrink-0">
+                    <i class="fa-solid fa-fire text-lg"></i>
+                  </div>
+                  <div>
+                    <span class="text-2xl font-extrabold text-stone-900 dark:text-white font-heading">{{ stats.streak }}</span>
+                    <p class="text-xs text-stone-600 dark:text-neutral-400 font-medium leading-snug">
+                      Rentetan Hari Membaca
+                    </p>
+                  </div>
+                </div>
+
+              </div>
+
+            </div>
+
+
+            <!-- RIGHT 4 COLUMNS: LEADERBOARD LOKAL (menggantikan "Aktivitas Terbaru")
+                 Data: DesaBacaStore.getLeaderboard() -> sekarang MOCK (nama warga palsu + data asli milik user).
+                 TODO(DB): GET backend/leaderboard.php?village=bacaMaju (lihat SQL di bagian bawah js/store.js) -->
+            <div class="lg:col-span-4">
+              <div class="rounded-2xl border p-6 bg-[#EFE8DB] border-[#D8CEBC] dark:bg-[#1A1B24] dark:border-[#262837]">
+                <div class="mb-1">
+                  <span class="text-xs font-bold text-stone-700 dark:text-neutral-300 tracking-wide whitespace-nowrap"><i class="fa-solid fa-trophy text-amber-500 mr-1.5"></i>Leaderboard Lokal</span>
+                  <div class="flex items-center gap-2 mt-2">
+                    <span class="whitespace-nowrap shrink-0 px-2.5 py-1 rounded-lg text-[10px] font-extrabold tracking-wide bg-red-500/10 text-red-600 dark:text-red-400 border border-red-500/20">
+                      <i class="fa-solid fa-house-flag mr-1"></i>Desa {{ board.village }}
+                    </span>
+                    <span class="text-[11px] text-stone-500 dark:text-neutral-400">Buku terbaca minggu ini</span>
+                  </div>
+                </div>
+                <p class="text-[10px] text-stone-400 dark:text-neutral-500 mb-4">{{ weekLabel }}</p>
+
+                <div class="rounded-2xl border p-2 bg-[#F8F3EA] border-[#D8CEBC] dark:bg-[#15161E] dark:border-[#242636]">
+                  <ol class="space-y-1">
+                    <li v-for="e in topEntries" :key="'t'+e.name"
+                        class="flex items-center gap-3 px-2.5 py-2 rounded-xl text-xs"
+                        :class="e.isMe ? 'bg-red-500/10 border border-red-500/30' : ''">
+                      <span class="w-6 h-6 shrink-0 rounded-full flex items-center justify-center text-[11px] font-extrabold"
+                            :class="rankClass(e.rank)">{{ e.rank }}</span>
+                      <div class="flex-1 min-w-0">
+                        <div class="flex items-center justify-between gap-2">
+                          <span class="font-bold truncate text-stone-900 dark:text-neutral-200">{{ e.name }}<span v-if="e.isMe" class="ml-1.5 text-[9px] font-extrabold uppercase text-red-500">kamu</span></span>
+                          <span class="shrink-0 font-extrabold text-stone-800 dark:text-neutral-100">{{ e.books }} <span class="font-medium text-[10px] text-stone-500 dark:text-neutral-400">buku</span></span>
+                        </div>
+                        <div class="h-1 rounded-full bg-[#DDD4C3] dark:bg-[#252838] mt-1.5 overflow-hidden">
+                          <div class="h-full rounded-full" :class="e.isMe ? 'bg-red-500' : 'bg-blue-500'" :style="{ width: barWidth(e.books) + '%' }"></div>
+                        </div>
+                      </div>
+                    </li>
+                  </ol>
+
+                  <!-- Posisi user kalau di luar top 10 -->
+                  <template v-if="meOutside">
+                    <div class="text-center text-stone-400 dark:text-neutral-600 text-xs leading-none py-1">⋮</div>
+                    <div class="flex items-center gap-3 px-2.5 py-2 rounded-xl text-xs bg-red-500/10 border border-red-500/30">
+                      <span class="w-6 h-6 shrink-0 rounded-full flex items-center justify-center text-[11px] font-extrabold bg-stone-200 text-stone-600 dark:bg-[#252838] dark:text-neutral-300">{{ meOutside.rank }}</span>
+                      <span class="flex-1 font-bold truncate text-stone-900 dark:text-neutral-200">{{ meOutside.name }} <span class="ml-1 text-[9px] font-extrabold uppercase text-red-500">kamu</span></span>
+                      <span class="font-extrabold text-stone-800 dark:text-neutral-100">{{ meOutside.books }} <span class="font-medium text-[10px] text-stone-500 dark:text-neutral-400">buku</span></span>
+                    </div>
+                  </template>
+                </div>
+
+                <p class="text-[10px] text-stone-400 dark:text-neutral-500 mt-3 leading-snug">
+                  Dihitung dari buku yang kamu buka sejak Senin. Reset tiap Senin. Nama warga lain masih data contoh (mockup).
+                </p>
+              </div>
+            </div>
+
+          </div>
+
+        </div>
+        </template>
+
+
+        <!-- ================= VIEW: RIWAYAT BACA =================
+             Data: DesaBacaStore.getAllProgress() + getHistory()
+             TODO(DB): backend/progress.php + backend/history.php (lihat js/store.js) -->
+        <div v-else-if="activeView === 'riwayat'" class="w-full max-w-5xl mx-auto rounded-2xl sm:rounded-3xl border shadow-2xl p-4 sm:p-7 space-y-6 transition-colors duration-300 bg-[#F8F3EA] border-[#D8CEBC] dark:bg-[#14151C]/90 dark:border-[#242634]">
+          <div class="flex flex-wrap items-center justify-between gap-3">
+            <div>
+              <h1 class="text-xl font-extrabold font-heading text-stone-900 dark:text-white">Riwayat Baca</h1>
+              <p class="text-xs text-stone-500 dark:text-neutral-400 mt-1">Semua buku yang pernah kamu buka dan selesaikan.</p>
+            </div>
+            <button v-if="history.length" @click="clearAll"
+                    class="px-3.5 py-2 rounded-xl text-[11px] font-bold border border-[#D8CEBC] dark:border-[#2A2D3C] text-stone-600 dark:text-neutral-400 hover:text-red-500 hover:border-red-500/50 transition-colors">
+              <i class="fa-regular fa-trash-can mr-1.5"></i>Hapus riwayat
+            </button>
+          </div>
+
+          <!-- Empty state -->
+          <div v-if="!history.length" class="rounded-2xl border border-dashed p-10 text-center border-[#D8CEBC] dark:border-[#2A2D3C]">
+            <div class="w-14 h-14 mx-auto rounded-2xl flex items-center justify-center bg-[#EFE8DB] dark:bg-[#1A1B24] text-stone-400 dark:text-neutral-500"><i class="fa-solid fa-clock-rotate-left text-xl"></i></div>
+            <p class="font-bold text-sm mt-4 text-stone-800 dark:text-neutral-200">Belum ada riwayat membaca</p>
+            <p class="text-xs text-stone-500 dark:text-neutral-400 mt-1">Mulai baca satu buku, nanti jejaknya muncul di sini.</p>
+            <div class="flex flex-wrap items-center justify-center gap-3 mt-5">
+              <a href="baca.html?book=atomic_habits" class="px-4 py-2.5 rounded-xl text-xs font-bold bg-red-600 hover:bg-red-500 text-white">Mulai membaca</a>
+              <button @click="loadDemo" class="px-4 py-2.5 rounded-xl text-xs font-bold border border-[#D8CEBC] dark:border-[#2A2D3C] text-stone-700 dark:text-neutral-300 hover:bg-black/5 dark:hover:bg-white/5">Isi data contoh</button>
+            </div>
+          </div>
+
+          <template v-else>
+            <!-- Lanjutkan membaca -->
+            <section v-if="continueList.length">
+              <h2 class="text-[11px] font-bold uppercase tracking-wider text-stone-500 dark:text-neutral-400 mb-3">Lanjutkan membaca</h2>
+              <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                <a v-for="p in continueList" :key="p.slug" :href="'baca.html?book=' + p.slug"
+                   class="group flex gap-4 rounded-2xl border p-4 transition-all bg-[#EFE8DB] border-[#D8CEBC] dark:bg-[#1A1B24] dark:border-[#262837] hover:border-red-500/50">
+                  <img :src="p.book.cover" :alt="p.book.title" class="w-16 h-24 object-cover rounded-lg border border-black/5 dark:border-white/5 shrink-0" />
+                  <div class="min-w-0 flex-1 flex flex-col">
+                    <h3 class="font-extrabold text-sm truncate text-stone-900 dark:text-white">{{ p.book.title }}</h3>
+                    <p class="text-[11px] text-stone-500 dark:text-neutral-400 truncate">{{ p.book.author }}</p>
+                    <div class="mt-auto pt-3">
+                      <div class="flex items-center justify-between text-[10px] text-stone-500 dark:text-neutral-400 mb-1.5"><span>Bab {{ p.chapter }} / {{ p.chapters }}</span><span class="font-bold">{{ p.progress }}%</span></div>
+                      <div class="h-1.5 rounded-full bg-[#DDD4C3] dark:bg-[#252838] overflow-hidden"><div class="h-full bg-blue-500 rounded-full" :style="{ width: p.progress + '%' }"></div></div>
+                    </div>
+                  </div>
+                </a>
+              </div>
+            </section>
+
+            <!-- Timeline per hari -->
+            <section>
+              <h2 class="text-[11px] font-bold uppercase tracking-wider text-stone-500 dark:text-neutral-400 mb-3">Jejak membaca</h2>
+              <div class="space-y-5">
+                <div v-for="g in historyGroups" :key="g.label">
+                  <p class="text-xs font-bold text-stone-700 dark:text-neutral-300 mb-2">{{ g.label }}</p>
+                  <div class="rounded-2xl border divide-y bg-[#F8F3EA] border-[#D8CEBC] divide-[#E5DDD0] dark:bg-[#15161E] dark:border-[#242636] dark:divide-[#222433]">
+                    <a v-for="h in g.items" :key="h.id" :href="'baca.html?book=' + h.slug" class="flex items-center gap-3 px-4 py-3 hover:bg-black/[0.03] dark:hover:bg-white/[0.03] transition-colors first:rounded-t-2xl last:rounded-b-2xl">
+                      <img :src="h.book.cover" :alt="h.book.title" class="w-8 h-11 object-cover rounded-md shrink-0 border border-black/5 dark:border-white/5" />
+                      <div class="flex-1 min-w-0 text-xs">
+                        <h4 class="font-bold truncate text-stone-900 dark:text-neutral-200">{{ h.book.title }}</h4>
+                        <p class="text-[11px] text-stone-600 dark:text-neutral-400 mt-0.5">{{ eventText(h) }}</p>
+                      </div>
+                      <i :class="eventIcon(h.type)"></i>
+                      <span class="text-[10px] text-stone-400 dark:text-neutral-500 w-10 text-right shrink-0">{{ clock(h.at) }}</span>
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </section>
+          </template>
+        </div>
+
+
+        <!-- ================= VIEW: BUKU TERSIMPAN (BOOKMARK) =================
+             Data: DesaBacaStore.getBookmarks()
+             TODO(DB): backend/bookmarks.php (sudah ada, tabel `bookmarks`) -->
+        <div v-else-if="activeView === 'bookmarks'" class="w-full max-w-5xl mx-auto rounded-2xl sm:rounded-3xl border shadow-2xl p-4 sm:p-7 space-y-6 transition-colors duration-300 bg-[#F8F3EA] border-[#D8CEBC] dark:bg-[#14151C]/90 dark:border-[#242634]">
+          <div>
+            <h1 class="text-xl font-extrabold font-heading text-stone-900 dark:text-white">Buku Tersimpan</h1>
+            <p class="text-xs text-stone-500 dark:text-neutral-400 mt-1">Buku yang kamu simpan untuk dibaca nanti.</p>
+          </div>
+
+          <div v-if="!saved.length" class="rounded-2xl border border-dashed p-10 text-center border-[#D8CEBC] dark:border-[#2A2D3C]">
+            <div class="w-14 h-14 mx-auto rounded-2xl flex items-center justify-center bg-[#EFE8DB] dark:bg-[#1A1B24] text-stone-400 dark:text-neutral-500"><i class="fa-regular fa-bookmark text-xl"></i></div>
+            <p class="font-bold text-sm mt-4 text-stone-800 dark:text-neutral-200">Belum ada buku tersimpan</p>
+            <p class="text-xs text-stone-500 dark:text-neutral-400 mt-1">Tekan ikon bookmark di kartu buku untuk menyimpannya.</p>
+            <div class="flex flex-wrap items-center justify-center gap-3 mt-5">
+              <a href="index.html#ebooks" class="px-4 py-2.5 rounded-xl text-xs font-bold bg-red-600 hover:bg-red-500 text-white">Cari buku</a>
+              <button @click="loadDemo" class="px-4 py-2.5 rounded-xl text-xs font-bold border border-[#D8CEBC] dark:border-[#2A2D3C] text-stone-700 dark:text-neutral-300 hover:bg-black/5 dark:hover:bg-white/5">Isi data contoh</button>
+            </div>
+          </div>
+
+          <div v-else class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5">
+            <div v-for="b in saved" :key="b.slug" class="rounded-2xl border p-4 flex flex-col bg-[#EFE8DB] border-[#D8CEBC] dark:bg-[#1A1B24] dark:border-[#262837]">
+              <div class="flex gap-4">
+                <img :src="b.book.cover" :alt="b.book.title" class="w-20 h-28 object-cover rounded-xl border border-black/5 dark:border-white/5 shrink-0" />
+                <div class="min-w-0 flex-1 flex flex-col">
+                  <h3 class="font-extrabold text-sm text-stone-900 dark:text-white leading-snug">{{ b.book.title }}</h3>
+                  <p class="text-[11px] text-stone-500 dark:text-neutral-400 mt-0.5">{{ b.book.author }}</p>
+                  <span class="self-start mt-2 px-2 py-0.5 rounded-md font-bold text-[9px] tracking-wider uppercase bg-[#E7DFD1] dark:bg-[#232533] text-stone-700 dark:text-neutral-300 border border-[#D8CEBC] dark:border-white/5">{{ b.book.category }}</span>
+                  <p class="text-[10px] text-stone-400 dark:text-neutral-500 mt-auto pt-2">Disimpan {{ ago(b.saved_at) }}</p>
+                </div>
+              </div>
+              <div v-if="b.progress.progress > 0" class="mt-4">
+                <div class="flex items-center justify-between text-[10px] text-stone-500 dark:text-neutral-400 mb-1.5"><span>Progres</span><span class="font-bold">{{ b.progress.progress }}%</span></div>
+                <div class="h-1.5 rounded-full bg-[#DDD4C3] dark:bg-[#252838] overflow-hidden"><div class="h-full bg-blue-500 rounded-full" :style="{ width: b.progress.progress + '%' }"></div></div>
+              </div>
+              <div class="flex items-center gap-2 mt-4 pt-4 border-t border-[#D8CEBC] dark:border-[#242635]">
+                <a :href="'baca.html?book=' + b.slug" class="flex-1 text-center px-3 py-2 rounded-xl text-[11px] font-bold bg-red-600 hover:bg-red-500 text-white">
+                  {{ b.progress.progress > 0 ? 'Lanjutkan' : 'Baca sekarang' }}
+                </a>
+                <button @click="removeBookmark(b.slug)" aria-label="Hapus dari bookmark" title="Hapus dari bookmark"
+                        class="w-9 h-9 rounded-xl border flex items-center justify-center border-[#D8CEBC] dark:border-[#2A2D3C] text-red-500 hover:bg-red-500/10 transition-colors">
+                  <i class="fa-solid fa-bookmark text-xs"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </main>
+
+    </div>
+
+  </div>
+
+  <!-- Data layer (mockup localStorage). Baca catatan di header js/store.js sebelum mengubah apa pun. -->
+  <script src="js/store.js"></script>
+
+  <!-- Vue 3 CDN (Stand-alone, tanpa build tool) -->
+  <script src="https://unpkg.com/vue@3/dist/vue.global.prod.js"></script>
+
+  <script>
+    const { createApp, ref, reactive, computed, onMounted } = Vue;
+
+    /* ---------------------------------------------------------------------
+     * MOCKUP: semua data lewat window.DesaBacaStore (js/store.js) = localStorage.
+     * Jangan akses localStorage langsung untuk bookmark/riwayat/progres di sini.
+     * Saat pindah ke database, ubah isi js/store.js saja (ada tanda TODO(DB)),
+     * lalu tambahkan async/await di pemanggil `DesaBacaStore.` pada file ini.
+     * --------------------------------------------------------------------- */
+    const Store = window.DesaBacaStore;
+
+    createApp({
+      setup() {
+        const validViews = ['dashboard', 'riwayat', 'bookmarks'];
+        const fromHash = () => {
+          const h = location.hash.replace('#', '');
+          return validViews.includes(h) ? h : 'dashboard';
+        };
+        const activeView = ref(fromHash());
+        window.addEventListener('hashchange', () => { activeView.value = fromHash(); });
+
+        const userProfile = reactive({
+          name: localStorage.getItem('desabaca_user') || 'Pengguna Desa Baca'
+        });
+
+        // --- state (di-refresh dari Store lewat refresh()) ---
+        const stats = reactive({ opened:0, completed:0, in_progress:0, minutes:0, hours:0, streak:0, bookmarks:0, completion_pct:0, week_books:0 });
+        const history = ref([]);
+        const progressList = ref([]);
+        const saved = ref([]);
+        const board = reactive({ village: Store.VILLAGE_NAME, week_start: '', entries: [] });
+
+        const refresh = () => {
+          Object.assign(stats, Store.getStats());
+          history.value = Store.getHistory();
+          progressList.value = Store.getAllProgress();
+          saved.value = Store.getBookmarks().map(b => ({ ...b, book: Store.getBook(b.slug), progress: Store.getProgress(b.slug) })).filter(b => b.book);
+          const lb = Store.getLeaderboard();
+          board.village = lb.village; board.week_start = lb.week_start; board.entries = lb.entries;
+        };
+
+        // Sinkron kalau tab lain mengubah data (mockup localStorage).
+        window.addEventListener('storage', refresh);
+        window.addEventListener('pageshow', refresh);
+
+        // --- tema ---
+        const isDark = ref(localStorage.getItem('desabaca_theme') !== 'light');
+        const toggleTheme = () => {
+          isDark.value = !isDark.value;
+          document.documentElement.classList.toggle('dark', isDark.value);
+          localStorage.setItem('desabaca_theme', isDark.value ? 'dark' : 'light');
+        };
+
+        // --- Leaderboard helpers ---
+        const TOP_N = 10;
+        const topEntries = computed(() => board.entries.slice(0, TOP_N));
+        const meOutside = computed(() => board.entries.slice(TOP_N).find(e => e.isMe) || null);
+        const maxBooks = computed(() => Math.max(1, ...board.entries.map(e => e.books)));
+        const barWidth = (n) => Math.max(n > 0 ? 6 : 0, Math.round((n / maxBooks.value) * 100));
+        const rankClass = (r) => r === 1 ? 'bg-amber-400 text-amber-950'
+          : r === 2 ? 'bg-slate-300 text-slate-800'
+          : r === 3 ? 'bg-orange-300 text-orange-950'
+          : 'bg-stone-200 text-stone-600 dark:bg-[#252838] dark:text-neutral-300';
+        const weekLabel = computed(() => {
+          if (!board.week_start) return '';
+          const a = new Date(board.week_start), b = new Date(a); b.setDate(b.getDate() + 6);
+          const f = d => d.toLocaleDateString('id-ID', { day: 'numeric', month: 'short' });
+          return `Minggu ini: ${f(a)} – ${f(b)}`;
+        });
+
+        // --- Riwayat helpers ---
+        const continueList = computed(() => progressList.value.filter(p => p.status !== 'completed').slice(0, 3));
+        const clock = (iso) => new Date(iso).toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' }).replace(':', '.');
+        const dayLabel = (iso) => {
+          const d = new Date(iso); const t = new Date();
+          const k = x => x.toDateString();
+          const y = new Date(); y.setDate(t.getDate() - 1);
+          if (k(d) === k(t)) return 'Hari ini';
+          if (k(d) === k(y)) return 'Kemarin';
+          return d.toLocaleDateString('id-ID', { weekday: 'long', day: 'numeric', month: 'long' });
+        };
+        const historyGroups = computed(() => {
+          const groups = [];
+          history.value.forEach(h => {
+            const label = dayLabel(h.at);
+            let g = groups[groups.length - 1];
+            if (!g || g.label !== label) { g = { label, items: [] }; groups.push(g); }
+            g.items.push(h);
+          });
+          return groups;
+        });
+        const eventText = (h) => h.type === 'finish' ? 'Menamatkan buku 🎉'
+          : h.type === 'chapter_done' ? `Menyelesaikan Bab ${h.chapter}`
+          : `Membuka Bab ${h.chapter}`;
+        const eventIcon = (t) => t === 'finish' ? 'fa-solid fa-trophy text-xs text-amber-500'
+          : t === 'chapter_done' ? 'fa-regular fa-circle-check text-sm text-emerald-500 dark:text-emerald-400'
+          : 'fa-solid fa-book-open text-xs text-blue-500 dark:text-blue-400';
+        const ago = (iso) => {
+          const m = Math.floor((Date.now() - new Date(iso)) / 60000);
+          if (m < 1) return 'baru saja';
+          if (m < 60) return `${m} menit lalu`;
+          const h = Math.floor(m / 60);
+          if (h < 24) return `${h} jam lalu`;
+          return `${Math.floor(h / 24)} hari lalu`;
+        };
+
+        // --- actions ---
+        const removeBookmark = (slug) => { Store.toggleBookmark(slug); refresh(); };
+        const clearAll = () => {
+          if (confirm('Hapus semua riwayat dan progres membaca? Bookmark tidak ikut terhapus.')) { Store.clearHistory(); refresh(); }
+        };
+        const loadDemo = () => { Store.seedDemo(); refresh(); };
+
+        onMounted(() => {
+          // TODO(DB): aktifkan lagi guard login ketika DATA_MODE = 'api':
+          //   const session = await fetch('backend/auth.php?action=me').then(r => r.json());
+          //   if (!session.logged_in) { location.href = 'index.html'; return; }
+          //   userProfile.name = session.user.username;
+          // Untuk mockup (localStorage) dashboard dibuka tanpa login PHP.
+          refresh();
+        });
+        refresh();
+
+        return { activeView, userProfile, isDark, toggleTheme, stats, board, history, saved,
+                 topEntries, meOutside, barWidth, rankClass, weekLabel,
+                 continueList, historyGroups, clock, eventText, eventIcon, ago,
+                 removeBookmark, clearAll, loadDemo };
+      }
+    }).mount('#app');
+  </script>
+
+</body>
+</html>

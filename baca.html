@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="id" class="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>BACA - DESA BACA</title>
+  <meta name="description" content="Dashboard membaca Desa Baca." />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = { darkMode:'class', theme:{ extend:{ fontFamily:{sans:['"Plus Jakarta Sans"','sans-serif']} } } };
+    (function(){ const t=localStorage.getItem('desabaca_theme')||'dark'; if(t!=='dark') document.documentElement.classList.remove('dark'); })();
+  </script>
+  <style>
+    [v-cloak]{display:none!important}
+    ::-webkit-scrollbar{width:6px;height:6px}::-webkit-scrollbar-track{background:transparent}::-webkit-scrollbar-thumb{background:#2b2e3e;border-radius:999px}
+  </style>
+</head>
+<body class="min-h-screen bg-[#101115] text-[#F3F4F6] font-sans">
+<!-- LAYOUT v4: tinggi dikunci setinggi layar; sidebar diam. Mobile (<md): navigasi di bawah.
+       <xl: panel Detail Buku ada di bawah teks dan halaman scroll di <main>; xl: dua kolom, tiap kolom scroll sendiri. -->
+<div id="app" v-cloak class="h-screen h-[100dvh] overflow-hidden flex flex-col">
+  <header class="shrink-0 h-[58px] px-3 sm:px-5 border-b flex items-center justify-between bg-[#14151B] border-[#20222D] text-neutral-300">
+    <div class="flex items-center gap-3">
+      <a href="dashboard.html" class="w-9 h-9 rounded-full border border-[#35384B] bg-[#252735] flex items-center justify-center hover:border-red-500 transition" title="Kembali ke Dashboard"><i class="fa-solid fa-arrow-left text-xs"></i></a>
+      <div><div class="text-xs font-extrabold tracking-widest uppercase">DESA BACA</div><div class="text-[10px] text-neutral-500">Ruang membaca</div></div>
+    </div>
+    <div class="flex items-center gap-4 text-xs">
+      <span class="hidden sm:inline text-neutral-500">{{ book.title }}</span>
+      <button @click="toggleSave" :title="saved ? 'Hapus dari bookmark' : 'Simpan ke bookmark'" class="px-3 h-8 rounded-full bg-[#1F202D] border border-neutral-600 flex items-center gap-2 text-[11px] font-bold hover:ring-2 hover:ring-red-500"><i :class="saved ? 'fa-solid fa-bookmark text-red-500' : 'fa-regular fa-bookmark'"></i><span class="hidden sm:inline">{{ saved ? 'Tersimpan' : 'Simpan' }}</span></button>
+      <button @click="toggleTheme" class="w-8 h-8 rounded-full bg-[#1F202D] border border-neutral-600 flex items-center justify-center hover:ring-2 hover:ring-red-500"><i :class="isDark ? 'fa-solid fa-moon text-amber-400' : 'fa-solid fa-sun text-amber-500'"></i></button>
+    </div>
+  </header>
+
+  <div class="flex-1 min-h-0 flex flex-col-reverse md:flex-row overflow-hidden">
+    <aside class="w-full md:w-[72px] shrink-0 border-t md:border-t-0 md:border-r flex flex-row md:flex-col items-center justify-between px-4 md:px-0 py-2 md:py-5 min-h-[4rem] pb-[max(0.5rem,env(safe-area-inset-bottom))] md:pb-5 bg-[#16171E] border-[#242633]">
+      <div class="flex flex-row md:flex-col items-center gap-3 md:gap-6">
+        <a href="index.html" class="w-10 h-10 rounded-full border border-[#35384B] bg-[#252735] flex items-center justify-center hover:border-red-500 group"><i class="fa-solid fa-lightbulb text-sm group-hover:text-red-500"></i></a>
+        <nav class="flex flex-row md:flex-col items-center gap-1.5 sm:gap-3 md:gap-4">
+          <a href="dashboard.html" class="w-10 h-10 rounded-xl flex items-center justify-center text-neutral-400 hover:text-white hover:bg-[#282A38]" title="Dashboard"><i class="fa-solid fa-table-cells-large"></i></a>
+          <a href="baca.html" class="w-10 h-10 rounded-xl flex items-center justify-center bg-[#282A38] text-white border border-[#3B3E52] shadow-sm" title="Progres Baca"><i class="fa-solid fa-graduation-cap"></i></a>
+          <a href="dashboard.html#bookmarks" class="w-10 h-10 rounded-xl flex items-center justify-center text-neutral-400 hover:text-white hover:bg-[#282A38]" title="Buku Tersimpan"><i class="fa-regular fa-bookmark"></i></a>
+          <a href="dashboard.html#riwayat" class="w-10 h-10 rounded-xl flex items-center justify-center text-neutral-400 hover:text-white hover:bg-[#282A38]" title="Riwayat Baca"><i class="fa-solid fa-chart-column"></i></a>
+        </nav>
+      </div>
+      <div class="hidden md:block text-[10px] text-neutral-600">15 MENIT</div>
+    </aside>
+
+    <aside class="w-56 shrink-0 border-r p-5 hidden lg:flex flex-col overflow-y-auto bg-[#16171E] border-[#242633]">
+      <h2 class="text-base font-extrabold tracking-wide mb-6">Dashboard</h2>
+      <p class="text-[11px] font-bold uppercase tracking-wider text-neutral-400 mb-2">Overview</p>
+      <div class="space-y-1.5">
+        <a href="dashboard.html" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-semibold text-neutral-400 hover:text-white hover:bg-white/5"><i class="fa-solid fa-table-cells-large text-xs"></i><span>Dashboard</span></a>
+        <a href="baca.html" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-bold bg-[#282A38] text-white border border-[#373A4D]"><i class="fa-solid fa-chart-line text-xs"></i><span>Progres Baca</span></a>
+        <a href="dashboard.html#riwayat" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-semibold text-neutral-400 hover:text-white hover:bg-white/5"><i class="fa-solid fa-clock-rotate-left text-xs"></i><span>Riwayat Baca</span></a>
+        <a href="dashboard.html#bookmarks" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-semibold text-neutral-400 hover:text-white hover:bg-white/5"><i class="fa-regular fa-bookmark text-xs"></i><span>Buku Tersimpan</span></a>
+      </div>
+      <div class="mt-auto pt-4 border-t border-[#242633] text-xs">
+        <p class="text-[10px] uppercase font-bold text-neutral-400 tracking-wider">Akun Aktif</p>
+        <p class="font-bold text-neutral-200 mt-0.5 truncate">{{ username }}</p>
+      </div>
+    </aside>
+
+    <main class="flex-1 min-w-0 min-h-0 overflow-y-auto xl:overflow-hidden overscroll-contain bg-[#101115] p-3 sm:p-5 lg:p-7">
+      <div class="xl:h-full grid grid-cols-1 xl:grid-cols-[minmax(0,1fr)_300px] gap-4">
+        <section class="min-h-0 rounded-2xl border border-[#242634] bg-[#14151C] overflow-hidden flex flex-col">
+          <div class="px-4 sm:px-5 py-4 border-b border-[#242634] flex items-center justify-between gap-3">
+            <div><p class="text-[10px] uppercase tracking-widest text-neutral-500 font-bold">Sedang Dibaca</p><h1 class="text-lg sm:text-xl font-extrabold mt-1">{{ book.title }}</h1></div>
+            <span class="px-3 py-1.5 rounded-full text-[10px] font-bold bg-blue-500/10 text-blue-400 border border-blue-500/20">Bab {{ chapter }} / {{ book.chapters }}</span>
+          </div>
+          <div class="flex-1 xl:overflow-y-auto p-4 sm:p-8 lg:p-10">
+            <div class="max-w-3xl mx-auto">
+              <div class="flex items-center gap-3 text-[11px] text-neutral-500 mb-7"><span>Estimasi 15 menit</span><span>•</span><span>{{ progress }}% selesai</span></div>
+              <h2 class="text-2xl sm:text-3xl font-extrabold leading-tight mb-7">Bab {{ chapter }} — Memulai Kebiasaan Membaca</h2>
+              <div class="space-y-5 text-sm sm:text-[15px] leading-8 text-neutral-300">
+                <p>Selamat datang di ruang baca Desa Baca. Halaman ini dirancang agar kamu dapat membaca dengan fokus, menyimpan progres, dan kembali melanjutkan bacaan kapan saja.</p>
+                <p>Gunakan panel di sebelah kanan untuk berpindah bab. Progres bacaan akan tersimpan secara lokal sehingga pengalaman membaca tetap nyaman meskipun kamu berpindah halaman.</p>
+                <div class="my-7 rounded-2xl border border-[#2A2D3C] bg-[#181A23] p-5 sm:p-6"><p class="text-xs uppercase tracking-widest font-bold text-neutral-500 mb-2">Catatan Bacaan</p><p class="text-sm leading-7 text-neutral-200">Baca secara perlahan, tandai bagian penting, lalu lanjutkan sedikit demi sedikit. Konsistensi lebih penting daripada membaca dalam jumlah besar sekaligus.</p></div>
+                <p>Setelah selesai membaca bab ini, tekan tombol <strong class="text-white">Tandai selesai</strong>. Kamu dapat melanjutkan ke bab berikutnya tanpa kehilangan posisi bacaan.</p>
+              </div>
+            </div>
+          </div>
+          <div class="px-3 sm:px-5 py-3 sm:py-4 border-t border-[#242634] flex items-center justify-between gap-2 sm:gap-3">
+            <button @click="prevChapter" :disabled="chapter===1" class="px-4 py-2.5 rounded-xl text-xs font-bold border border-[#2A2D3C] text-neutral-300 hover:bg-white/5 disabled:opacity-30 disabled:cursor-not-allowed"><i class="fa-solid fa-arrow-left sm:mr-2"></i><span class="hidden sm:inline">Sebelumnya</span></button>
+            <button @click="completeChapter" class="px-4 py-2.5 rounded-xl text-xs font-bold bg-red-600 hover:bg-red-500 text-white"><i class="fa-solid fa-check mr-2"></i>Tandai selesai</button>
+            <button @click="nextChapter" :disabled="chapter===book.chapters" class="px-4 py-2.5 rounded-xl text-xs font-bold border border-[#2A2D3C] text-neutral-300 hover:bg-white/5 disabled:opacity-30 disabled:cursor-not-allowed"><span class="hidden sm:inline">Berikutnya</span><i class="fa-solid fa-arrow-right sm:ml-2"></i></button>
+          </div>
+        </section>
+
+        <aside class="rounded-2xl border border-[#242634] bg-[#14151C] overflow-hidden flex flex-col xl:min-h-0">
+          <div class="p-5 border-b border-[#242634]"><p class="text-[10px] uppercase tracking-widest text-neutral-500 font-bold">Detail Buku</p><div class="flex gap-4 mt-4"><img :src="book.cover" class="w-20 h-28 object-cover rounded-xl border border-white/5" :alt="book.title"><div class="min-w-0"><h3 class="font-extrabold text-sm">{{ book.title }}</h3><p class="text-xs text-neutral-500 mt-1">{{ book.author }}</p><div class="mt-3 flex items-center gap-2 text-[10px] text-neutral-400"><i class="fa-solid fa-book-open"></i>{{ book.chapters }} bab</div></div></div></div>
+          <div class="p-5 flex-1 xl:overflow-y-auto"><div class="flex items-center justify-between mb-3"><span class="text-xs font-bold">Daftar Bab</span><span class="text-[10px] text-neutral-500">{{ progress }}%</span></div><div class="w-full h-2 rounded-full bg-[#252838] overflow-hidden mb-5"><div class="h-full bg-blue-500 rounded-full" :style="{width: progress+'%'}"></div></div><div class="space-y-2"><button v-for="n in book.chapters" :key="n" @click="goChapter(n)" class="w-full text-left px-3 py-3 rounded-xl border text-xs flex items-center justify-between transition" :class="chapter===n ? 'bg-[#282A38] border-[#3B3E52] text-white' : 'bg-[#181A23] border-[#242634] text-neutral-400 hover:text-white hover:bg-[#1E202A]'"><span>Bab {{ n }}</span><i v-if="doneList.includes(n)" class="fa-solid fa-check text-emerald-400"></i><i v-else-if="n===chapter" class="fa-solid fa-book-open text-blue-400"></i></button></div></div>
+        </aside>
+      </div>
+    </main>
+  </div>
+</div>
+<!-- Data layer (mockup localStorage). Baca catatan di header js/store.js sebelum mengubah apa pun. -->
+<script src="js/store.js"></script>
+<script src="https://unpkg.com/vue@3/dist/vue.global.prod.js"></script>
+<script>
+/* MOCKUP: progres, riwayat, dan bookmark disimpan lewat window.DesaBacaStore (localStorage).
+ * Jangan akses localStorage langsung untuk data itu di sini. Nanti diganti database
+ * dengan mengubah js/store.js saja (cari TODO(DB)). Buku dipilih lewat ?book=<slug>. */
+const {createApp,ref,computed}=Vue;
+const Store=window.DesaBacaStore;
+createApp({setup(){
+ const slug=(new URLSearchParams(location.search).get('book'))||'atomic_habits';
+ const book=Store.getBook(slug)||Store.getBook('atomic_habits');
+ const initial=Store.getProgress(book.slug);
+ const chapter=ref(initial.chapter);
+ const doneList=ref(initial.done);
+ const saved=ref(Store.isBookmarked(book.slug));
+ const isDark=ref(localStorage.getItem('desabaca_theme')!=='light');
+ const username=localStorage.getItem('desabaca_user')||'Pengguna Desa Baca';
+ const progress=computed(()=>Math.round((doneList.value.length/book.chapters)*100));
+ document.title=book.title+' - DESA BACA';
+ const open=()=>Store.recordOpen(book.slug,chapter.value);
+ open();
+ function goChapter(n){chapter.value=n;open();}
+ function nextChapter(){if(chapter.value<book.chapters)goChapter(chapter.value+1);}
+ function prevChapter(){if(chapter.value>1)goChapter(chapter.value-1);}
+ function completeChapter(){
+  const r=Store.completeChapter(book.slug,chapter.value);
+  doneList.value=Store.getProgress(book.slug).done;
+  if(!r.finished&&chapter.value<book.chapters)goChapter(chapter.value+1);
+ }
+ function toggleSave(){saved.value=Store.toggleBookmark(book.slug);}
+ function toggleTheme(){isDark.value=!isDark.value;document.documentElement.classList.toggle('dark',isDark.value);localStorage.setItem('desabaca_theme',isDark.value?'dark':'light');}
+ return {chapter,isDark,book,username,progress,doneList,saved,goChapter,nextChapter,prevChapter,completeChapter,toggleSave,toggleTheme}
+}}).mount('#app');
+</script>
+</body>
+</html>
